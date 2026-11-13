@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:billing_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+
+jwt:
+  secret: chave-de-teste-com-pelo-menos-32-caracteres-ok
+
+mercadopago:
+  modo: fake
+  url-publica: http://billing.test
+
+outbox:
+  relay:
+    intervalo-ms: 3600000
+
+management:
+  health:
+    rabbit:
+      enabled: false

@@ -1,0 +1,20 @@
+# Os três microsserviços compartilham UM ALB (IngressGroup "oficina"); cada serviço
+# declara só as rotas que possui. Criado pelo AWS Load Balancer Controller (EKS).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: billing-service
+  namespace: oficina
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: oficina
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health/readiness
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - { path: /orcamentos, pathType: Prefix, backend: { service: { name: billing-service, port: { number: 8080 } } } }
+          - { path: /pagamentos, pathType: Prefix, backend: { service: { name: billing-service, port: { number: 8080 } } } }
+          - { path: /webhooks, pathType: Prefix, backend: { service: { name: billing-service, port: { number: 8080 } } } }
